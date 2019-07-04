@@ -12,8 +12,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Student {
 
     @Id
-    @NonNull @UniqueElements
-    private String id;
+    @NonNull
+    private int id;
 
     @NonNull @UniqueElements private String name;
 }
