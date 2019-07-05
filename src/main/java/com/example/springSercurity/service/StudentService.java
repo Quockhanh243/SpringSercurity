@@ -1,5 +1,6 @@
 package com.example.springSercurity.service;
 
+import com.example.springSercurity.config.JavaContains;
 import com.example.springSercurity.entity.Student;
 import com.example.springSercurity.reponsitory.StudentReponsitory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,24 +20,15 @@ public class StudentService {
     @Autowired
     StudentReponsitory studentReponsitory;
 
-    String [] messenger = {"Get all Student From DB",
-            "Find all Student From DB by name %s\n",
-            "Student has been create",
-            "Student has been deleted",
-            "Student not found",
-            "Updating Student with ID = %d\n",
-            "Student has been updated"
-    };
-
     public List<Student> getStudentFormDB(){
-        System.out.println(messenger[0]);
+        System.out.println(JavaContains.GETALL);
         List<Student> students = new ArrayList<>();
         studentReponsitory.findAll().forEach(students::add);
         return students;
     }
 
     public List<Student> findByName(String name){
-        System.out.printf(messenger[1],name);
+        System.out.printf(JavaContains.GETALLBYNAME,name);
         List<Student> students = new ArrayList<>();
         studentReponsitory.findStudentsByName(name).forEach(students::add);
         return students;
@@ -49,7 +41,7 @@ public class StudentService {
 
     public ResponseEntity<String> createStudent(Student student) {
         studentReponsitory.save(student);
-        return new ResponseEntity<>(messenger[2], HttpStatus.OK);
+        return new ResponseEntity<>(JavaContains.STUDENTCREATE, HttpStatus.OK);
     }
 
     public ResponseEntity<String> deleteStudent(int id){
@@ -58,19 +50,19 @@ public class StudentService {
                     studentReponsitory.deleteById(id);
                     return 0;
                 }
-        ).orElseThrow(()-> new ResourceNotFoundException(messenger[4]));
-        return new ResponseEntity<>(messenger[3], HttpStatus.OK);
+        ).orElseThrow(()-> new ResourceNotFoundException(JavaContains.STUDENTNOTFOUND));
+        return new ResponseEntity<>(JavaContains.STUDENTDELETE, HttpStatus.OK);
     }
 
     public ResponseEntity<String> updateStudent(int id, Student studentData){
-        System.out.printf(messenger[5],id);
+        System.out.printf(JavaContains.STUDENTUPDATEID,id);
         studentReponsitory.findById(id).map(
                 student -> {
                     student.setId(studentData.getId());
                     student.setName(studentData.getName());
                     return studentReponsitory.save(student);
                 }
-        ).orElseThrow(() -> new ResourceNotFoundException(messenger[4]));
-        return new ResponseEntity<>(messenger[6], HttpStatus.OK);
+        ).orElseThrow(() -> new ResourceNotFoundException(JavaContains.STUDENTNOTFOUND));
+        return new ResponseEntity<>(JavaContains.STUDENTUPDATE, HttpStatus.OK);
     }
 }
